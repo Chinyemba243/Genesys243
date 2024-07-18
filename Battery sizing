@@ -1,0 +1,49 @@
+def get_appliance_power():
+    while True:
+        choice = input("Do you want to input (1) Current and Voltage or (2) Power directly? Enter 1 or 2: ")
+        if choice == '1':
+            current = float(input("Enter the current in amps: "))
+            voltage = float(input("Enter the voltage in volts: "))
+            power = current * voltage
+            break
+        elif choice == '2':
+            power = float(input("Enter the power in watts: "))
+            break
+        else:
+            print("Invalid choice. Please enter 1 or 2.")
+    return power
+
+def get_total_power():
+    total_power = 0
+    num_appliances = int(input("Enter the number of appliances: "))
+    for i in range(num_appliances):
+        print(f"Appliance {i + 1}:")
+        total_power += get_appliance_power()
+    return total_power
+
+def main():
+    total_power = get_total_power()
+    hours_per_day = float(input("Enter the number of hours per day the appliances will run: "))
+    battery_type = input("Choose the battery type (lithium/lead acid): ").strip().lower()
+
+    daily_energy_demand = total_power * hours_per_day
+    
+    if battery_type == 'lead acid':
+        battery_capacity = daily_energy_demand * 2 * 1.2
+    elif battery_type == 'lithium':
+        battery_capacity = daily_energy_demand * 1.2 * 1.05
+    else:
+        print("Invalid battery type. Please enter 'lithium' or 'lead acid'.")
+        return
+
+    ah_capacity_12v = battery_capacity / 12
+    ah_capacity_24v = battery_capacity / 24
+    ah_capacity_48v = battery_capacity / 48
+
+    print("Genesys recommends the following battery capacities at these voltages:")
+    print(f"12V: {ah_capacity_12v:.2f} Ah")
+    print(f"24V: {ah_capacity_24v:.2f} Ah")
+    print(f"48V: {ah_capacity_48v:.2f} Ah")
+
+if __name__ == "__main__":
+    main()
